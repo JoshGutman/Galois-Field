@@ -10,6 +10,7 @@ class GF {
 public:
 	GF(unsigned int);
 	GF(string);
+	unsigned int add(unsigned int, unsigned int);
 	unsigned int multiply(unsigned int, unsigned int);
 	unsigned int mod(unsigned int, unsigned int);
 	unsigned int divide(unsigned int, unsigned int);
@@ -24,3 +25,5 @@ private:
 	unsigned int px;
 
 };
+
+#endif
