@@ -49,6 +49,17 @@ GF::GF(string px) {
 
 
 
+// Galois Field addition
+unsigned int GF::add(unsigned int x, unsigned int y) {
+
+	// Addition is the same as XOR in all Galois Fields
+	// Perform modulus to make sure result is not bigger than px
+	return mod((x^y), this->px);
+}
+
+
+
+
 // Galois Field multiplication
 unsigned int GF::multiply(unsigned int x, unsigned int y) {
 
@@ -72,7 +83,7 @@ unsigned int GF::multiply(unsigned int x, unsigned int y) {
 
 
 
-// Galois Field Division
+// Galois Field division
 unsigned int GF::divide(unsigned int x, unsigned int y) {
 
 	int inverse = eea(this->px, y);
