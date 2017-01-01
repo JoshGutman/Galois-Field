@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include "GF.h"
 
 
@@ -22,15 +23,15 @@ GF::GF(string px) {
 
 		// x^1 or x^n+
 		if (px[i] == 'x') {
-			
+
 			// x^1  -->  this.px += pow(2,1)
-			if (i+1 >= px.length() || px[i+1] == '+') {
+			if (i + 1 >= px.length() || px[i + 1] == '+') {
 				this->px += 2;
 			}
 
 			// x^n  -->  this.px += pow(2, n)
 			else {
-				i+=2;
+				i += 2;
 				string temp = "";
 				while (i < px.length() && isdigit(px[i])) {
 					temp += px[i++];
@@ -71,6 +72,16 @@ unsigned int GF::multiply(unsigned int x, unsigned int y) {
 
 
 
+// Galois Field Division
+unsigned int GF::divide(unsigned int x, unsigned int y) {
+
+	int inverse = eea(this->px, y);
+	return multiply(x, inverse);
+
+}
+
+
+
 // Galois Field modulus
 unsigned int GF::mod(unsigned int x, unsigned int m) {
 	unsigned int msbM = mostSignificantBit(m);
@@ -99,12 +110,56 @@ unsigned int GF::mostSignificantBit(unsigned int x) {
 
 
 
+// Extended Euclidian Algorithm to find modular multiplicative inverse (recursive)
+int GF::eea(int a, int b) {
+
+	int q1 = ea(a, b)[0];
+	int r2 = ea(a, b)[1];
+	int t2 = q1 * (-1);
+
+	int q2 = ea(b, r2)[0];
+	int r3 = ea(b, r2)[1];
+
+	int out = ea_recurse(r2, r3, q2, t2, 1);
+
+	if (out < 0) {
+		out += a;
+	}
+	return out;
+}
+
+// Helper function for eea
+int* GF::ea(int a, int b) {
+
+	int out[2];
+	out[0] = (a / b);
+	out[1] = (a - (b*out[0]));
+
+	return out;
+}
+
+// Helper function for eea
+int GF::ea_recurse(int a, int b, int q, int t1, int t2) {
+	if (b >= 1) {
+		int newQ = ea(a, b)[0];
+		int newR = ea(a, b)[1];
+		int tempT = t2 - (t1*q);
+
+		int x = ea_recurse(b, newR, newQ, tempT, t1);
+	}
+	if (b < 1) {
+		return t1;
+	}
+}
+
+
+
 // Removes all insatances of character from str
 // Used in GF(string px)
 string GF::removeAll(char character, string str) {
 	string out;
 	while (str.find(character) != -1) {
-		out = str.erase(str.find(character),1);
+		out = str.erase(str.find(character), 1);
 	}
 	return out;
 }
